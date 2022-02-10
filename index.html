@@ -1,0 +1,79 @@
+<html>
+    <head>
+        <title>Org Finder</title>
+        <script>
+
+            document.addEventListener('DOMContentLoaded',function(){
+                let a=[];
+                let n=0;
+                let m=0;
+                document.querySelector('form').onsubmit= function(){
+                    n=document.querySelector('#number1').value;
+                    m=document.querySelector('#number2').value;
+                    var org=document.querySelector('#organisation').value;
+                    for (let j=1;j<2;j++){
+                        var url=`https://api.github.com/orgs/${org}/repos?page=${j}&per_page=100`;
+                        fetch(url)
+                        .then(response=>response.json())
+                        .then(data => {
+                            for ( let i=0;i<data.length;i++){
+                                a.push([data[i].forks,data[i].full_name]);
+                            }
+                        })
+                        .catch(error =>{
+                        console.log(error);
+                        });
+                    }
+                    a.sort(function(a,b){return a[0] - b[0]})
+                    a.reverse();
+                    // let b=[];
+                    // for ( let i=0;i<data.length;i++){
+                    //     if (data[i].forks>=a[4]){
+                    //         b.push(data[i].full_name);
+                    //     }
+                    // }
+                    console.log(a);
+                    //console.log(b);
+                    //document.querySelector('#result').innerHTML= a[0][1],a[1][1],a[2][1];
+                    return false;
+                }
+                console.log('done');
+                let b=[];
+                for (k=0;k<n;k++){
+                    b.push(a[k][1]);
+                }
+                
+                document.querySelector('#result').innerHTML= b;
+                console.log('done');
+                a=[]
+                for (k=0;k<n;k++){
+                    var url=`https://api.github.com/repos/${b[k]}/forks?sort=oldest`;
+                    fetch(url)
+                    .then(response=>response.json())
+                    .then(data => {
+                        for ( let i=0;i<m;i++){
+                            a.push(data[i].name);
+                        }
+                    })
+                    .catch(error =>{
+                    console.log(error);
+                    });
+                }
+                console.log('done');
+                document.querySelector('#res').innerHTML= a;
+
+            });
+        </script>
+    </head>
+    <body>
+        <form>
+            <input id="organisation" placeholder="Organisation" type="text">
+            <input id="number1" placeholder="top" type="text">
+            <input id="number2" placeholder="collab" type="text">
+            <input type="submit" value="Find">
+        </form>
+        <div id="result">
+        </div>
+        <div id="res"></div>
+    </body>
+</html>
