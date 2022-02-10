@@ -4,7 +4,7 @@ To run, download and open the file index.html in your browser. Nothing more to d
 
 View at the screenshots to see the input format in the webpage. 
 
-###### Imp : example
+### Imp : example
 
 amzn  5   5
 
@@ -14,7 +14,7 @@ amzn/alexa-skills-kit-js
 
 (result format = {forker}/{what he named the forked repo})
 
-###### Imp : Shortcomings
+### Imp : Shortcomings
 
 Due to 3-4 deadlines, 2 quizes and upcoming minors during the time duration provided for the project, there are some shortcomings.
 
