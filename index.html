@@ -4,76 +4,84 @@
         <script>
 
             document.addEventListener('DOMContentLoaded',function(){
-                let a=[];
-                let n=0;
-                let m=0;
-                document.querySelector('form').onsubmit= function(){
+
+                document.querySelector('#form1').onsubmit= function(){
+                    let n=0;
+                    let m=0;
                     n=document.querySelector('#number1').value;
                     m=document.querySelector('#number2').value;
                     var org=document.querySelector('#organisation').value;
-                    for (let j=1;j<2;j++){
-                        var url=`https://api.github.com/orgs/${org}/repos?page=${j}&per_page=100`;
-                        fetch(url)
-                        .then(response=>response.json())
-                        .then(data => {
-                            for ( let i=0;i<data.length;i++){
-                                a.push([data[i].forks,data[i].full_name]);
-                            }
-                        })
-                        .catch(error =>{
-                        console.log(error);
-                        });
-                    }
-                    a.sort(function(a,b){return a[0] - b[0]})
-                    a.reverse();
-                    // let b=[];
-                    // for ( let i=0;i<data.length;i++){
-                    //     if (data[i].forks>=a[4]){
-                    //         b.push(data[i].full_name);
-                    //     }
-                    // }
-                    console.log(a);
-                    //console.log(b);
-                    //document.querySelector('#result').innerHTML= a[0][1],a[1][1],a[2][1];
-                    return false;
-                }
-                console.log('done');
-                let b=[];
-                for (k=0;k<n;k++){
-                    b.push(a[k][1]);
-                }
-                
-                document.querySelector('#result').innerHTML= b;
-                console.log('done');
-                a=[]
-                for (k=0;k<n;k++){
-                    var url=`https://api.github.com/repos/${b[k]}/forks?sort=oldest`;
+                    var url=`https://api.github.com/orgs/${org}/repos?page=1&per_page=100`;
+                    //console.log(url);
                     fetch(url)
                     .then(response=>response.json())
                     .then(data => {
-                        for ( let i=0;i<m;i++){
-                            a.push(data[i].name);
+                        let a=[];
+                        console.log(data.length);
+                        for ( let i=0;i<data.length;i++){
+                            a.push(data[i].forks);
                         }
+                        console.log(a);
+                        a.sort(function(a,b){return a - b})
+                        a.reverse();
+                        let b=[];
+                        for (let i=0;i<data.length;i++){
+                            if (data[i].forks>a[n]) b.push(data[i].full_name);
+                        }
+                        document.querySelector('#result').innerHTML= b;
                     })
                     .catch(error =>{
-                    console.log(error);
+                        console.log("error: ",error);
                     });
-                }
-                console.log('done');
-                document.querySelector('#res').innerHTML= a;
 
+                    return false;
+                };
+
+            });
+
+            document.addEventListener('DOMContentLoaded',function(){
+                document.querySelector('#form2').onsubmit= function(){
+                    let m=0;
+                    m=document.querySelector('#number2').value;
+                    var rep=document.querySelector('#repo').value;
+                    console.log(repo);
+                    var url=`https://api.github.com/repos/${rep}/forks?sort=oldest`;
+                    console.log(url);
+                    fetch(url)
+                    .then(response=>response.json())
+                    .then(data => {
+                        let a=[];
+                        console.log(data);
+                        for ( let i=0;i<m;i++){
+                            a.push(data[i].full_name);
+                        }
+                        console.log(a);
+                        document.querySelector('#res').innerHTML= a;
+                    })
+                    .catch(error =>{
+                        console.log("error: ",error);
+                    });
+
+                    return false;
+                }
             });
         </script>
     </head>
     <body>
-        <form>
+        <div>top is the number of repos to be displayed and no. forkers is the number of forkers to be displayed</div>
+        <form id="form1">
             <input id="organisation" placeholder="Organisation" type="text">
-            <input id="number1" placeholder="top" type="text">
-            <input id="number2" placeholder="collab" type="text">
+            <input id="number1" placeholder="top" type="number">
+            <input id="number2" placeholder="no. forkers" type="number">
             <input type="submit" value="Find">
         </form>
         <div id="result">
         </div>
+        <div>The repo must be entered from one of the above for example "octokit/octokit.rb"</div>
+        <form id="form2">
+            <input id="repo" placeholder="Type your repo">
+            <input type="submit" value="Find">
+        </form>
         <div id="res"></div>
     </body>
 </html>
